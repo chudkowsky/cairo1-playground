@@ -760,7 +760,6 @@ name = "cairo1-playground"
 version = "0.1.0"
 dependencies = [
  "cairo-lang-casm",
- "cairo-lang-compiler",
  "cairo-lang-sierra",
  "cairo-lang-sierra-ap-change",
  "cairo-lang-sierra-to-casm",
