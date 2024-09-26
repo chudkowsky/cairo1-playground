@@ -1,0 +1,66 @@
+[package]
+name = "cairo1-playground"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cairo-lang-sierra-type-size = { version = "2.8.0", default-features = false }
+cairo-lang-sierra-ap-change = { version = "2.8.0", default-features = false }
+cairo-lang-sierra-gas = { version = "2.8.0", default-features = false }
+cairo-vm = { git = "https://github.com/lambdaclass/cairo-vm.git",features = ["cairo-1-hints"] }
+clap = { version = "4.3.10", features = ["derive"] }
+thiserror = { version = "1.0.40" }
+mimalloc = { version = "0.1.37", default-features = false }
+num-bigint = { version = "0.4", default-features = false, features = [
+    "serde",
+    "rand",
+] }
+rand = { version = "0.8.5", features = ["small_rng"], default-features = false }
+num-traits = { version = "0.2", default-features = false }
+num-integer = { version = "0.1.45", default-features = false }
+serde = { version = "1.0", features = ["derive"], default-features = false }
+serde_json = { version = "1.0", features = [
+    "arbitrary_precision",
+    "alloc",
+], default-features = false }
+hex = { version = "0.4.3", default-features = false }
+bincode = { version = "2.0.0-rc.3", default-features = false, features = [
+    "serde",
+] }
+starknet-crypto = { version = "0.6.1", default-features = false, features = [
+    "signature-display",
+    "alloc",
+] }
+sha3 = { version = "0.10.8", default-features = false }
+lazy_static = { version = "1.4.0", default-features = false, features = [
+    "spin_no_std",
+] }
+nom = { version = "7", default-features = false }
+sha2 = { version = "0.10.7", features = ["compress"], default-features = false }
+generic-array = { version = "0.14.7", default-features = false }
+keccak = { version = "0.1.2", default-features = false }
+hashbrown = { version = "0.14.0", features = ["serde"] }
+anyhow = { version = "1.0.69", default-features = false }
+thiserror-no-std = { version = "2.0.2", default-features = false }
+
+bitvec = { version = "1", default-features = false, features = ["alloc"] }
+
+# Dependencies for cairo-1-hints feature
+cairo-lang-starknet = { version = "2.8.0", default-features = false }
+cairo-lang-casm = { version = "2.8.0", default-features = false }
+
+cairo-lang-starknet-classes = { version = "2.8.0", default-features = false }
+cairo-lang-compiler = { version = "=2.8.0", default-features = false }
+cairo-lang-sierra-to-casm = { version = "2.8.0", default-features = false }
+cairo-lang-sierra = { version = "2.8.0", default-features = false }
+cairo-lang-runner = { version = "2.8.0", default-features = false }
+cairo-lang-utils = { version = "=2.8.0", default-features = false }
+
+# TODO: check these dependencies for wasm compatibility
+ark-ff = { version = "0.4.2", default-features = false }
+ark-std = { version = "0.4.0", default-features = false }
+
+# For fuzzing
+arbitrary = { version = "1.3.0", features = ["derive"] }
+itertools = "0.11.0"
+starknet-types-core = "~0.1.4"
