@@ -2,8 +2,8 @@ pub mod cairo_run;
 pub mod error;
 use std::path::PathBuf;
 
-pub use crate::cairo_run::FuncArg;
 use crate::cairo_run::{cairo_run_program, Cairo1RunConfig};
+use cairo_run::FuncArg;
 pub use cairo_vm::types::layout_name::LayoutName;
 pub use cairo_vm::{
     types::relocatable::{MaybeRelocatable, Relocatable},
@@ -11,13 +11,16 @@ pub use cairo_vm::{
     Felt252,
 };
 use error::Error;
+use starknet_types_core::felt::Felt;
 
 pub fn get_cairo_pie(
     program_file: PathBuf,
     output_file: PathBuf,
     layout: LayoutName,
-    args: FuncArg,
+    input: Vec<Felt>,
 ) -> Result<Option<String>, Error> {
+    let args = FuncArg::Array(input);
+
     let cairo_run_config = Cairo1RunConfig {
         proof_mode: false,
         serialize_output: true,
@@ -49,7 +52,7 @@ pub fn get_cairo_pie(
 #[cfg(test)]
 mod tests {
     use crate::error::Error;
-    use crate::{get_cairo_pie, FuncArg};
+    use crate::get_cairo_pie;
     use cairo_vm::types::layout_name::LayoutName;
     use itertools::Itertools;
     use starknet_types_core::felt::Felt;
@@ -86,9 +89,8 @@ mod tests {
         let filename = PathBuf::from("batcher.json");
         let cairo_pie_output = PathBuf::from("batcher.zip");
         let layout = LayoutName::recursive;
-        let args = FuncArg::Array(input);
 
-        match get_cairo_pie(filename, cairo_pie_output, layout, args) {
+        match get_cairo_pie(filename, cairo_pie_output, layout, input) {
             Err(Error::Cli(err)) => err.exit(),
             Ok(output) => {
                 if let Some(output_string) = output {
