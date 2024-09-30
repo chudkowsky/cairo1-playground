@@ -3,6 +3,7 @@ pub mod error;
 use std::path::PathBuf;
 
 use crate::cairo_run::{cairo_run_program, Cairo1RunConfig};
+use cairo_lang_sierra::program::Program;
 use cairo_run::FuncArg;
 pub use cairo_vm::types::layout_name::LayoutName;
 pub use cairo_vm::{
@@ -14,7 +15,7 @@ use error::Error;
 use starknet_types_core::felt::Felt;
 
 pub fn get_cairo_pie(
-    program_file: PathBuf,
+    program_file: Program,
     output_file: PathBuf,
     layout: LayoutName,
     input: Vec<Felt>,
@@ -31,19 +32,8 @@ pub fn get_cairo_pie(
         finalize_builtins: true,
         append_return_values: false,
     };
-
     // Try to parse the file as a sierra program
-    let file = std::fs::read(&program_file)?;
-    let sierra_program = match serde_json::from_slice(&file) {
-        Ok(program) => program,
-        Err(_) => {
-            println!("Failed to parse the file as a sierra program");
-            return Err(Error::SierraCompilation(
-                "Failed to parse the file as a sierra program".to_string(),
-            ));
-        }
-    };
-    let (runner, _, serialized_output) = cairo_run_program(&sierra_program, cairo_run_config)?;
+    let (runner, _, serialized_output) = cairo_run_program(&program_file, cairo_run_config)?;
     runner.get_cairo_pie()?.write_zip_file(&output_file)?;
 
     Ok(serialized_output)
@@ -56,6 +46,7 @@ mod tests {
     use cairo_vm::types::layout_name::LayoutName;
     use itertools::Itertools;
     use starknet_types_core::felt::Felt;
+    use std::fs;
     use std::path::PathBuf;
     #[test]
     fn test_get_cairo_pie() -> Result<(), Error> {
@@ -89,8 +80,9 @@ mod tests {
         let filename = PathBuf::from("batcher.json");
         let cairo_pie_output = PathBuf::from("batcher.zip");
         let layout = LayoutName::recursive;
-
-        match get_cairo_pie(filename, cairo_pie_output, layout, input) {
+        let program = fs::read(filename)?;
+        let program_json = serde_json::from_slice(&program).unwrap();
+        match get_cairo_pie(program_json, cairo_pie_output, layout, input) {
             Err(Error::Cli(err)) => err.exit(),
             Ok(output) => {
                 if let Some(output_string) = output {

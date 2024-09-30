@@ -21,7 +21,6 @@ serde_json = { version = "1.0", features = [
     "arbitrary_precision",
     "alloc",
 ], default-features = false }
-cairo-lang-starknet = { version = "2.7.0", default-features = false }
 cairo-lang-casm = { version = "2.7.0", default-features = false }
 cairo-lang-starknet-classes = { version = "2.7.0", default-features = false }
 cairo-lang-sierra-to-casm = { version = "2.7.0", default-features = false }
